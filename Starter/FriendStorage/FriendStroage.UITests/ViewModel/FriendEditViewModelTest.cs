@@ -43,5 +43,68 @@ namespace FriendStroage.UITests.ViewModel
             Assert.True(fired);
         }
 
+        [Fact]
+        public void ShouldDisableSaveCommandWhenFriendIsLoaded()
+        {
+            _viewModel.Load(_friendId);
+
+            Assert.False(_viewModel.SaveCommand.CanExecute(null));
+        }
+
+        [Fact]
+        public void ShoulEnableSaveCommandWhenFriendIsChanged()
+        {
+            _viewModel.Load(_friendId);
+
+            _viewModel.Friend.FirstName = "Changed";
+
+            Assert.True(_viewModel.SaveCommand.CanExecute(null));
+        }
+
+        [Fact]
+        public void ShouldDisableSaveCommandWithoutLoad()
+        {
+            Assert.False(_viewModel.SaveCommand.CanExecute(null));
+        }
+
+        [Fact]
+        public void ShouldRaiseCanExecuteChangedForSaveCommandWhenFriendIsChanged()
+        {
+            _viewModel.Load(_friendId);
+            var fired = false;
+            _viewModel.SaveCommand.CanExecuteChanged += (s, e) => fired = true;
+            _viewModel.Friend.FirstName = "Changed";
+            Assert.True(fired);
+        }
+
+        [Fact]
+        public void ShouldRaiseCanExecuteChangedForSaveCommandAfterLoad()
+        {            
+            var fired = false;
+            _viewModel.SaveCommand.CanExecuteChanged += (s, e) => fired = true;
+            _viewModel.Load(_friendId);
+            Assert.True(fired);
+        }
+
+        [Fact]
+        public void ShouldCallSaveMethodOfDataProviderWhenSaveCommandIsExecuted()
+        {
+            _viewModel.Load(_friendId);
+            _viewModel.Friend.FirstName = "Changed";
+
+            _viewModel.SaveCommand.Execute(null);
+            _dataProviderMock.Verify(dp => dp.SaveFriend(_viewModel.Friend.Model), Times.Once);
+        }
+
+        [Fact]
+        public void ShoulAcceptChangesWhenSaveCommandIsExecuted()
+        {
+            _viewModel.Load(_friendId);
+            _viewModel.Friend.FirstName = "Changed";
+
+            _viewModel.SaveCommand.Execute(null);
+            Assert.False(_viewModel.Friend.IsChanged);
+        }
+
     }
 }
