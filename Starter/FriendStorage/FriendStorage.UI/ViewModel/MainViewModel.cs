@@ -22,7 +22,15 @@ namespace FriendStorage.UI.ViewModel
             FriendEditViewModels = new ObservableCollection<IFriendEditViewModel>();
             _friendEditVmCreator = friendEditVmCreator;
             eventAggregator.GetEvent<OpenFriendEditViewEvent>().Subscribe(OnOpenFriendEditView);
+            eventAggregator.GetEvent<FriendDeletedEvent>().Subscribe(OnFriendDeleted);
             CloseFriendTabCommand = new DelegateCommand(OnCloseFriendTabExecute);
+            AddFriendCommand = new DelegateCommand(OnAddFriendExecute);
+        }
+
+        private void OnFriendDeleted(int friendId)
+        {
+            var friendEditVm = FriendEditViewModels.Single(vm => vm.Friend.Id == friendId);
+            FriendEditViewModels.Remove(friendEditVm);
         }
 
         private void OnCloseFriendTabExecute(object obj)
@@ -31,22 +39,36 @@ namespace FriendStorage.UI.ViewModel
             FriendEditViewModels.Remove(friendEditVm);
         }
 
+        private void OnAddFriendExecute(object obj)
+        {
+            IFriendEditViewModel friendEditVm = CreateAndLoadFriendEditViewModel(null);
+
+            SelectedFriendEditViewModel = friendEditVm;
+        }
+
+        private IFriendEditViewModel CreateAndLoadFriendEditViewModel(int? friendId)
+        {
+            var friendEditVm = _friendEditVmCreator();
+            FriendEditViewModels.Add(friendEditVm);
+            friendEditVm.Load(friendId);
+            return friendEditVm;
+        }
+
         private void OnOpenFriendEditView(int friendId)
         {
-
             var friendEditVm = FriendEditViewModels.SingleOrDefault(vm => vm.Friend.Id == friendId);
 
             if (friendEditVm == null)
             {
-                friendEditVm = _friendEditVmCreator();
-                FriendEditViewModels.Add(friendEditVm);
-                friendEditVm.Load(friendId);
-            }                
-            
+                friendEditVm = CreateAndLoadFriendEditViewModel(friendId);
+            }
+
             SelectedFriendEditViewModel = friendEditVm;
         }
 
         public ICommand CloseFriendTabCommand { get; private set; }
+
+        public ICommand AddFriendCommand { get; private set; }
 
         public INavigationViewModel NavigationViewModel { get; private set; }
 

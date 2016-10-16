@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using FriendStorage.DataAccess;
 using FriendStorage.UI.DataProvider;
+using FriendStorage.UI.Dialogs;
 using FriendStorage.UI.View;
 using FriendStorage.UI.ViewModel;
 using Prism.Events;
@@ -14,6 +15,9 @@ namespace FriendStorage.UI.Startup
             var builder = new ContainerBuilder();
 
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
+
+            builder.RegisterType<MessageDialogService>()
+                .As<IMessageDialogService>();
 
             builder.RegisterType<NavigationViewModel>()
                 .As<INavigationViewModel>();

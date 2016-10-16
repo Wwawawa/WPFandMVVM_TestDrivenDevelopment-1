@@ -1,0 +1,15 @@
+﻿<Window x:Class="FriendStorage.UI.Dialogs.YesNoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FriendStorage.UI.Dialogs"
+        mc:Ignorable="d"
+        Title="YesNoDialog" Height="161.473" Width="304.249">
+    <Grid>
+        <Button x:Name="button" Content="Yes" Margin="55,82,0,0" VerticalAlignment="Top" Width="75" HorizontalAlignment="Left" Click="ButtonYes_Click"/>
+        <Button x:Name="button1" Content="No" Margin="166,82,55,0" VerticalAlignment="Top" Width="Auto" Click="ButtonNo_Click"/>
+        <TextBlock x:Name="textBlock" Margin="55,26,55,0" TextWrapping="Wrap" Text="The Message Text" VerticalAlignment="Top" Height="40" HorizontalAlignment="Center" Width="186" TextAlignment="Center"/>
+
+    </Grid>
+</Window>
